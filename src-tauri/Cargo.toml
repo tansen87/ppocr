@@ -1,0 +1,24 @@
+[package]
+name = "ppocr"
+version = "0.1.0"
+description = "An application based on PaddleOCR-json"
+authors = ["you"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "lib"
+path = "src/lib/mod.rs"
+
+[build-dependencies]
+tauri-build = { version = "1.5.3", features = [] }
+
+[dependencies]
+paddleocr = "0.4.1"
+serde_json = "1"
+tauri = { version = "1.7.1", features = [ "api-all"] }
+
+
+[features]
+# This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
