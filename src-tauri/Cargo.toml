@@ -1,7 +1,7 @@
 [package]
 name = "ppocr"
 version = "0.1.0"
-description = "An application based on PaddleOCR-json"
+description = "pp-ocr"
 authors = ["you"]
 edition = "2021"
 

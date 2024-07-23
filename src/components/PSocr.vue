@@ -1,36 +1,19 @@
 <template>
-  <q-scroll-area style="height: 450px; width: 100%">
-    <div
-      class="q-pa-md"
-      style="
-        display: flex;
-        justify-content: space-between;
-        max-width: 1500px;
-        margin: 0 auto;
-      "
-    >
-      <!-- column 1 -->
-      <div class="q-gutter-y-md" style="flex-basis: 45%; max-width: 160px">
-        <q-input>
-          <template v-slot:prepend>
-            <q-btn
-              color="secondary"
-              label="show"
-              @click="handlePaste"
-              style="width: 80px"
-              class="screenshot-area"
-            />
-            <q-btn
-              color="secondary"
-              label="ocr"
-              @click="ocr"
-              style="width: 80px"
-            />
-          </template>
-        </q-input>
-      </div>
+  <div
+    class="q-pa-md"
+    style="
+      display: flex;
+      justify-content: space-between;
+      max-width: 1500px;
+      margin: 0 auto;
+    "
+  >
+    <div class="q-gutter-y-md" style="flex-basis: 45%; max-width: 80px">
+      <q-btn color="secondary" label="ocr" @click="ocr" style="width: 80px" />
     </div>
+  </div>
 
+  <q-scroll-area style="height: 380px; width: 100%">
     <div
       class="q-pa-md"
       style="
@@ -41,7 +24,7 @@
       "
     >
       <q-img
-      v-if="clip"
+        v-if="clip"
         :src="clip"
         spinner-color="white"
         style="
@@ -101,6 +84,19 @@ async function ocr() {
     message: "ocr...",
   });
 
+  clip.value = "";
+  try {
+    const clipboardItems = await navigator.clipboard.read();
+    const imageBlob = await clipboardItems[0].getType("image/png");
+    if (imageBlob) {
+      clip.value = URL.createObjectURL(imageBlob);
+    } else {
+      console.log("剪贴板中没有图像数据");
+    }
+  } catch (err) {
+    console.error("无法读取剪贴板中的图像", err);
+  }
+
   const ocrResults = await invoke("screen", {});
   const jsonData = JSON.parse(ocrResults);
 
@@ -136,21 +132,4 @@ async function ocr() {
     });
   }
 }
-
-async function handlePaste() {
-  clip.value = "";
-  try {
-    const clipboardItems = await navigator.clipboard.read();
-    const imageBlob = await clipboardItems[0].getType("image/png");
-    if (imageBlob) {
-      clip.value = URL.createObjectURL(imageBlob);
-    } else {
-      console.log("剪贴板中没有图像数据");
-    }
-  } catch (err) {
-    console.error("无法读取剪贴板中的图像", err);
-  }
-}
 </script>
-
-<style></style>
